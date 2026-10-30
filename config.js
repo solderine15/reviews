@@ -1,7 +1,7 @@
 // Edit this file to set up the review page. No other file needs changing.
 window.REVIEW_CONFIG = {
   // Free key from https://web3forms.com (enter the email address that should receive feedback).
-  web3formsKey: "YOUR_WEB3FORMS_ACCESS_KEY",
+  web3formsKey: "58a18b4e-a818-4552-b1bd-c26fff865416",
 
   // Used when the QR/NFC URL has no ?loc= or an unknown one.
   defaultLocation: "choisy",
