@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#054e4e">
+<meta name="robots" content="noindex">
+<title>Chicken Spot — Votre avis</title>
+<link rel="icon" href="assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,400;0,600;0,700;1,600&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+  :root {
+    --orange: #ea9036;
+    --orange-dark: #d27a22;
+    --teal: #054e4e;
+    --teal-deep: #0d2b2c;
+    --ink-on-orange: #043b3b;
+    --text: #0d2b2c;
+    --muted: #5b7172;
+    --bg: #fbf6ef;
+    --card: #ffffff;
+    --line: #e7dfd3;
+    --radius: 14px;
+    --heading: "Josefin Sans", system-ui, sans-serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100dvh;
+    overflow-x: clip;
+    background: var(--bg);
+    color: var(--text);
+    font: 17px/1.5 var(--body);
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: var(--teal) url("assets/pattern-logo.png");
+    color: #fff;
+    padding: 20px 16px 64px;
+    text-align: center;
+    position: relative;
+  }
+  header img { height: 46px; width: auto; display: block; margin: 8px auto 6px; }
+  .loc {
+    font: 600 13px/1 var(--heading);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--orange);
+  }
+  .ribbon {
+    background: var(--orange); color: #fff;
+    padding: 9px 0 7px;
+    overflow: hidden; white-space: nowrap;
+    position: relative; z-index: 2;
+    box-shadow: 0 4px 14px rgba(234,144,54,.25);
+  }
+  .ribbon div {
+    display: inline-block; animation: mq 30s linear infinite;
+    font: 700 16px var(--heading); text-transform: uppercase; letter-spacing: .04em;
+  }
+  .ribbon span { margin: 0 14px; }
+  @keyframes mq { to { transform: translateX(-50%); } }
+
+  main {
+    flex: 1;
+    width: 100%; max-width: 460px;
+    margin: -44px auto 0; padding: 0 16px 32px;
+    position: relative;
+  }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px rgba(13,43,44,.12);
+    padding: 28px 22px;
+    text-align: center;
+  }
+  h1 {
+    font: 700 28px/1.15 var(--heading);
+    margin: 0 0 8px;
+    color: var(--teal-deep);
+  }
+  h1 em { font-style: italic; color: var(--orange); }
+  p.sub { margin: 0 0 22px; color: var(--muted); }
+
+  .stars { display: flex; justify-content: center; gap: 6px; margin: 4px 0 10px; }
+  .star {
+    background: none; border: 0; padding: 4px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .12s ease;
+  }
+  .star svg { width: 48px; height: 48px; display: block; }
+  .star path { fill: #e9e2d7; transition: fill .12s ease; }
+  .star.on path { fill: var(--orange); }
+  .star:active { transform: scale(.9); }
+  .star:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; border-radius: 8px; }
+  .hint { min-height: 1.5em; font: 600 15px/1.5 var(--heading); color: var(--teal); margin: 0; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; min-height: 52px; padding: 14px 18px;
+    border-radius: 12px; border: 2px solid var(--orange);
+    background: var(--orange); color: var(--ink-on-orange);
+    font: 700 17px/1 var(--heading); letter-spacing: .02em;
+    text-decoration: none; cursor: pointer;
+  }
+  .btn:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+  .btn:disabled { opacity: .6; cursor: wait; }
+
+  form { text-align: left; margin-top: 6px; }
+  label { display: block; font: 600 14px/1.3 var(--heading); color: var(--teal-deep); margin: 16px 0 6px; }
+  label small { font-weight: 400; color: var(--muted); }
+  textarea, input[type=text], input[type=email], input[type=tel] {
+    width: 100%; font: inherit; color: var(--text);
+    border: 1.5px solid var(--line); border-radius: 10px;
+    padding: 12px 14px; background: #fff;
+  }
+  textarea { min-height: 120px; resize: vertical; }
+  textarea:focus, input:focus { outline: none; border-color: var(--teal); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row label { margin-top: 0; }
+  .contact-head { margin-top: 18px; font-size: 14px; color: var(--muted); }
+  .hp { position: absolute; left: -9999px; }
+  .privacy { font-size: 12.5px; color: var(--muted); margin: 14px 0 18px; }
+  .err { color: #b3261e; font-size: 14px; margin: 10px 0 0; min-height: 1em; }
+
+  .big-icon { font-size: 56px; line-height: 1; margin-bottom: 10px; }
+  [hidden] { display: none !important; }
+  .fade { animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } }
+
+  footer { text-align: center; font-size: 12.5px; color: var(--muted); padding: 14px 16px 24px; }
+  footer b { font-family: var(--heading); color: var(--teal); letter-spacing: .04em; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ribbon div, .fade { animation: none; }
+  }
+  @media (max-width: 360px) {
+    .star svg { width: 40px; height: 40px; }
+    .row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <img src="assets/logo.png" alt="Chicken Spot">
+  <div class="loc" id="locName"></div>
+</header>
+
+<main>
+  <!-- Step 1: rating -->
+  <section class="card fade" id="stepRate">
+    <h1 data-i18n-html="rateTitle"></h1>
+    <p class="sub" data-i18n="rateSub"></p>
+    <div class="stars" id="stars" role="radiogroup"></div>
+    <p class="hint" id="hint" aria-live="polite"></p>
+  </section>
+
+  <!-- Step 2a: 4–5 stars -->
+  <section class="card fade" id="stepGoogle" hidden>
+    <div class="big-icon">🍗</div>
+    <h1 data-i18n-html="googleTitle"></h1>
+    <p class="sub" data-i18n="googleSub"></p>
+    <a class="btn" id="googleBtn" href="#" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.35 11.1H12v2.98h5.35c-.23 1.4-1.66 4.1-5.35 4.1-3.22 0-5.85-2.67-5.85-5.96S8.78 6.26 12 6.26c1.83 0 3.06.78 3.76 1.45l2.56-2.47C16.68 3.7 14.55 2.75 12 2.75 6.9 2.75 2.75 6.9 2.75 12S6.9 21.25 12 21.25c5.34 0 8.88-3.75 8.88-9.04 0-.6-.07-1.06-.15-1.51z"/></svg>
+      <span data-i18n="googleBtn"></span>
+    </a>
+  </section>
+
+  <!-- Step 2b: 1–3 stars -->
+  <section class="card fade" id="stepFeedback" hidden>
+    <h1 data-i18n-html="fbTitle"></h1>
+    <p class="sub" data-i18n="fbSub"></p>
+    <form id="fbForm" novalidate>
+      <label for="msg" data-i18n="fbMsg"></label>
+      <textarea id="msg" name="message" required maxlength="3000"></textarea>
+
+      <p class="contact-head" data-i18n="fbContact"></p>
+      <div class="row">
+        <div>
+          <label for="name"><span data-i18n="fbName"></span></label>
+          <input id="name" name="name" type="text" autocomplete="name" maxlength="100">
+        </div>
+        <div>
+          <label for="phone"><span data-i18n="fbPhone"></span></label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40">
+        </div>
+      </div>
+      <label for="email"><span data-i18n="fbEmail"></span></label>
+      <input id="email" name="email" type="email" autocomplete="email" maxlength="150">
+
+      <input class="hp" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="privacy" data-i18n="privacy"></p>
+      <button class="btn" type="submit" id="sendBtn"><span data-i18n="fbSend"></span></button>
+      <p class="err" id="err" role="alert"></p>
+    </form>
+  </section>
+
+  <!-- Step 3: thanks for feedback -->
+  <section class="card fade" id="stepThanks" hidden>
+    <div class="big-icon">🧡</div>
+    <h1 data-i18n-html="thanksTitle"></h1>
+    <p class="sub" data-i18n="thanksSub"></p>
+  </section>
+</main>
+
+<div class="ribbon" aria-hidden="true"><div id="ribbon"></div></div>
+<footer><b>Chicken Spot</b> · Simply Legendary</footer>
+
+<script>
+(() => {
+  const CFG = window.REVIEW_CONFIG;
+  const T = {
+    fr: {
+      ribbon: ["Commande en ligne", "Prêt en 15 min", "100% halal", "Simply Legendary"],
+      rateTitle: "Alors, ton <em>Chicken Spot</em> ?",
+      rateSub: "Touche les étoiles pour noter ta visite.",
+      hints: ["", "Pas top…", "Peut mieux faire", "Correct", "Très bon !", "Légendaire !"],
+      googleTitle: "Merci, ça nous <em>régale</em> !",
+      googleSub: "Tu peux partager ton avis sur Google ? Ça aide énormément ton restaurant.",
+      googleBtn: "Laisser un avis Google",
+      fbTitle: "Désolé, on peut <em>mieux faire</em>.",
+      fbSub: "Dis-nous ce qui n'allait pas. Ton message va directement à l'équipe du restaurant.",
+      fbMsg: "Que s'est-il passé ?",
+      fbContact: "Tu veux qu'on te recontacte ? (facultatif)",
+      fbName: "Nom", fbPhone: "Téléphone", fbEmail: "E-mail",
+      privacy: "Tes coordonnées servent uniquement à te répondre au sujet de cette visite et ne sont jamais partagées.",
+      fbSend: "Envoyer",
+      sending: "Envoi…",
+      errEmpty: "Écris-nous quelques mots avant d'envoyer.",
+      errSend: "L'envoi a échoué. Vérifie ta connexion et réessaie.",
+      thanksTitle: "Merci, <em>message reçu</em>.",
+      thanksSub: "L'équipe va le lire. On espère te revoir très vite pour te prouver qu'on peut faire mieux.",
+      starLabel: n => `${n} étoile${n > 1 ? "s" : ""}`,
+      ratingGroup: "Note de 1 à 5 étoiles",
+      title: "Chicken Spot — Votre avis",
+    },
+  };
+
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  const locKey = CFG.locations[params.get("loc")] ? params.get("loc") : CFG.defaultLocation;
+  const loc = CFG.locations[locKey];
+  const googleUrl = loc.reviewUrl || "https://search.google.com/local/writereview?placeid=" + encodeURIComponent(loc.placeId);
+
+  const lang = "fr";
+  let rating = 0;
+
+  const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg>';
+  for (let n = 1; n <= 5; n++) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "star";
+    b.dataset.n = n;
+    b.setAttribute("role", "radio");
+    b.setAttribute("aria-checked", "false");
+    b.innerHTML = STAR;
+    b.addEventListener("mouseenter", () => paint(n));
+    b.addEventListener("focus", () => paint(n));
+    b.addEventListener("click", () => choose(n));
+    $("stars").appendChild(b);
+  }
+  $("stars").addEventListener("mouseleave", () => paint(rating));
+
+  function paint(n) {
+    document.querySelectorAll(".star").forEach(s => s.classList.toggle("on", +s.dataset.n <= n));
+    $("hint").textContent = T[lang].hints[n];
+  }
+
+  function show(id) {
+    ["stepRate", "stepGoogle", "stepFeedback", "stepThanks"].forEach(s => $(s).hidden = s !== id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function track(event, props) {
+    // Hook for cookieless analytics (Plausible / Umami / Cloudflare). No-op if none is loaded.
+    if (window.plausible) window.plausible(event, { props: { loc: locKey, ...props } });
+  }
+
+  function choose(n) {
+    rating = n;
+    paint(n);
+    document.querySelectorAll(".star").forEach(s => s.setAttribute("aria-checked", String(+s.dataset.n === n)));
+    track("rating", { stars: n });
+    setTimeout(() => {
+      if (n >= 4) {
+        show("stepGoogle");
+        // Brief thank-you, then go to Google. The button stays as a fallback if the redirect is blocked.
+        setTimeout(() => { location.href = googleUrl; }, 1600);
+      } else {
+        show("stepFeedback");
+        $("msg").focus({ preventScroll: true });
+      }
+    }, 350);
+  }
+
+  $("fbForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const t = T[lang];
+    const f = e.target;
+    if (!f.message.value.trim()) { $("err").textContent = t.errEmpty; f.message.focus(); return; }
+    if (f.botcheck.checked) { show("stepThanks"); return; }
+
+    $("err").textContent = "";
+    $("sendBtn").disabled = true;
+    $("sendBtn").firstElementChild.textContent = t.sending;
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: CFG.web3formsKey,
+          subject: `${"★".repeat(rating)}${"☆".repeat(5 - rating)} Chicken Spot ${loc.name} — avis client`,
+          from_name: "Avis Chicken Spot",
+          restaurant: loc.name,
+          note: `${rating}/5`,
+          message: f.message.value.trim(),
+          nom: f.name.value.trim() || "—",
+          "téléphone": f.phone.value.trim() || "—",
+          "e-mail": f.email.value.trim() || "—",
+          botcheck: false,
+        }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message);
+      track("feedback_sent", { stars: rating });
+      show("stepThanks");
+    } catch (err) {
+      $("err").textContent = t.errSend;
+      $("sendBtn").disabled = false;
+      $("sendBtn").firstElementChild.textContent = t.fbSend;
+    }
+  });
+
+  function applyLang() {
+    const t = T[lang];
+    document.documentElement.lang = lang;
+    document.title = t.title;
+    document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = t[el.dataset.i18n]);
+    document.querySelectorAll("[data-i18n-html]").forEach(el => el.innerHTML = t[el.dataset.i18nHtml]);
+    document.querySelectorAll(".star").forEach(s => s.setAttribute("aria-label", t.starLabel(+s.dataset.n)));
+    $("stars").setAttribute("aria-label", t.ratingGroup);
+    $("ribbon").innerHTML = Array(8).fill(t.ribbon.map(x => `<span>${x}</span>·`).join("")).join("");
+    $("hint").textContent = t.hints[rating];
+  }
+
+  $("locName").textContent = loc.name;
+  $("googleBtn").href = googleUrl;
+  applyLang();
+  track("scan");
+})();
+</script>
+</body>
+</html>
