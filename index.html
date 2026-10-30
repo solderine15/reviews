@@ -228,10 +228,11 @@
       fbMsg: "Que s'est-il passé ?",
       fbContact: "Tu veux qu'on te recontacte ? (facultatif)",
       fbName: "Nom", fbPhone: "Téléphone", fbEmail: "E-mail",
-      privacy: "Tes coordonnées servent uniquement à te répondre au sujet de cette visite et ne sont jamais partagées.",
+      privacy: "Tes coordonnées servent uniquement à te répondre au sujet de cette visite. Elles nous sont transmises par e-mail via notre prestataire Web3Forms et ne sont jamais revendues.",
       fbSend: "Envoyer",
       sending: "Envoi…",
       errEmpty: "Écris-nous quelques mots avant d'envoyer.",
+      errEmail: "Cette adresse e-mail ne semble pas valide.",
       errSend: "L'envoi a échoué. Vérifie ta connexion et réessaie.",
       thanksTitle: "Merci, <em>message reçu</em>.",
       thanksSub: "L'équipe va le lire. On espère te revoir très vite pour te prouver qu'on peut faire mieux.",
@@ -274,6 +275,9 @@
   function show(id) {
     ["stepRate", "stepGoogle", "stepFeedback", "stepThanks"].forEach(s => $(s).hidden = s !== id);
     window.scrollTo({ top: 0, behavior: "smooth" });
+    const h = $(id).querySelector("h1");
+    h.tabIndex = -1;
+    h.focus({ preventScroll: true });
   }
 
   function track(event, props) {
@@ -282,6 +286,7 @@
   }
 
   function choose(n) {
+    if (rating) return; // first tap wins; a second quick tap must not start a competing flow
     rating = n;
     paint(n);
     document.querySelectorAll(".star").forEach(s => s.setAttribute("aria-checked", String(+s.dataset.n === n)));
@@ -292,17 +297,27 @@
         // Brief thank-you, then go to Google. The button stays as a fallback if the redirect is blocked.
         setTimeout(() => { location.href = googleUrl; }, 1600);
       } else {
+        history.pushState({ step: "feedback" }, "");
         show("stepFeedback");
-        $("msg").focus({ preventScroll: true });
       }
     }, 350);
   }
+
+  // Back from the feedback form returns to the stars instead of leaving the page.
+  window.addEventListener("popstate", () => {
+    if ($("stepFeedback").hidden) return;
+    rating = 0;
+    paint(0);
+    document.querySelectorAll(".star").forEach(s => s.setAttribute("aria-checked", "false"));
+    show("stepRate");
+  });
 
   $("fbForm").addEventListener("submit", async e => {
     e.preventDefault();
     const t = T[lang];
     const f = e.target;
     if (!f.message.value.trim()) { $("err").textContent = t.errEmpty; f.message.focus(); return; }
+    if (!f.email.checkValidity()) { $("err").textContent = t.errEmail; f.email.focus(); return; }
     if (f.botcheck.checked) { show("stepThanks"); return; }
 
     $("err").textContent = "";
@@ -312,6 +327,7 @@
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
+        signal: AbortSignal.timeout ? AbortSignal.timeout(15000) : undefined,
         body: JSON.stringify({
           access_key: CFG.web3formsKey,
           subject: `${"★".repeat(rating)}${"☆".repeat(5 - rating)} Chicken Spot ${loc.name} — avis client`,
